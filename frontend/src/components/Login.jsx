@@ -84,7 +84,13 @@ const handleSubmit = async (e) => {
 
     toast.success("Inicio de sesión exitoso.");
 
-    navigate("/");
+    if (datos.usuario.rol === "Administrador") {
+      navigate("/panel-administrador");
+    } else if (datos.usuario.rol === "Empleado") {
+      navigate("/panel-empleado");
+    } else {
+      navigate("/");
+    }
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     toast.error(error.message || "Correo o contraseña incorrectos.");

@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
 import { useState, useEffect, useRef } from "react";
 
-function Header() {
+function Header({ esGestion, vistaCliente, onVolverAlPanel }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -66,13 +66,24 @@ function Header() {
     navigate("/");
   };
 
+
   const verPanel = () => {
     setMenuAbierto(false);
     setMenuMovilAbierto(false);
+
     if (!usuario) {
       navigate("/login");
       return;
     }
+
+    // Si es Admin/Empleado viendo el sitio como cliente, volvemos al sidebar
+    if (esGestion && vistaCliente) {
+      onVolverAlPanel();
+      if (usuario.rol === "Administrador") navigate("/panel-administrador");
+      else if (usuario.rol === "Empleado") navigate("/panel-empleado");
+      return;
+    }
+
     if (usuario.rol === "Administrador") navigate("/panel-administrador");
     else if (usuario.rol === "Empleado") navigate("/panel-empleado");
     else if (usuario.rol === "Cliente") navigate("/panel-cliente");

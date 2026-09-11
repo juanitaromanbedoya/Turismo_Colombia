@@ -22,11 +22,16 @@ import ServicioDetalle from "./pages/ServicioDetalle";
 
 function App() {
   const [usuario, setUsuario] = useState(() => {
-    const usuarioGuardado = localStorage.getItem("usuario");
+  const usuarioGuardado = localStorage.getItem("usuario");
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
 
+  const [sidebarColapsado, setSidebarColapsado] = useState(false);
+  const [vistaCliente, setVistaCliente] = useState(false);
+  const [seccionPanel, setSeccionPanel] = useState("resumen");
+
   const esGestion = usuario && (usuario.rol === "Administrador" || usuario.rol === "Empleado");
+  const mostrarSidebar = esGestion && !vistaCliente;
 
   return (
     <BrowserRouter>
@@ -65,59 +70,81 @@ function App() {
     },
   }}
 />
-    {esGestion ? (
-        <SidebarAdmin usuario={usuario} setUsuario={setUsuario} />
+      {mostrarSidebar ? (
+        <SidebarAdmin
+          usuario={usuario}
+          setUsuario={setUsuario}
+          colapsado={sidebarColapsado}
+          setColapsado={setSidebarColapsado}
+          onVerComoCliente={() => setVistaCliente(true)}
+          seccion={seccionPanel}
+          setSeccion={setSeccionPanel}
+        />
       ) : (
-        <Header />
+        <Header
+          esGestion={esGestion}
+          vistaCliente={vistaCliente}
+          onVolverAlPanel={() => setVistaCliente(false)}
+        />
       )}
 
-        <main className={esGestion ? "lg:pl-64" : ""}>
-    
-        <Routes>
-          <Route path="/" element={<Index />} />
+      <main className={mostrarSidebar ? (sidebarColapsado ? "lg:pl-20" : "lg:pl-64") : ""}>
+<Routes>
+  <Route path="/" element={<Index />} />
 
-          <Route path="/destinos" element={<Destinos />} />
+  <Route path="/destinos" element={<Destinos />} />
 
-          <Route path="/contacto" element={<Contacto />} />
+  <Route path="/contacto" element={<Contacto />} />
 
-          <Route path="/quienes-somos" element={<QuienesSomos />} />
+  <Route path="/quienes-somos" element={<QuienesSomos />} />
 
-          <Route path="/login"  element={<Login setUsuario={setUsuario} />} />
+  <Route path="/login" element={<Login setUsuario={setUsuario} />} />
 
-          <Route path="/Servicios" element={ <RutaProtegida>
-                <Servicios />
-              </RutaProtegida> } />
-          <Route path="/servicios/:id" element={<ServicioDetalle />} />
+  <Route
+    path="/Servicios"
+    element={
+      <RutaProtegida>
+        <Servicios />
+      </RutaProtegida>
+    }
+  />
 
-          <Route path="/panel-administrador" element={ <RutaProtegida rolesPermitidos={["Administrador"]}>
-                <PanelAdministrador />
-              </RutaProtegida> } />
+  <Route path="/servicios/:id" element={<ServicioDetalle />} />
 
-          <Route path="/panel-empleado" element={ <RutaProtegida rolesPermitidos={["Empleado"]}> <PanelEmpleado />
-              </RutaProtegida> } />
+  <Route
+    path="/panel-administrador"
+    element={
+      <RutaProtegida rolesPermitidos={["Administrador"]}>
+        <PanelAdministrador seccion={seccionPanel} setSeccion={setSeccionPanel} />
+      </RutaProtegida>
+    }
+  />
 
-          <Route
-            path="/panel-cliente"
-            element={
-              <RutaProtegida rolesPermitidos={["Cliente"]}>
-                <PanelCliente />
-              </RutaProtegida>
-            }
-          />
+  <Route
+    path="/panel-empleado"
+    element={
+      <RutaProtegida rolesPermitidos={["Empleado"]}>
+        <PanelEmpleado seccion={seccionPanel} setSeccion={setSeccionPanel} />
+      </RutaProtegida>
+    }
+  />
 
-          <Route
-            path="/recuperar-password"
-            element={<RecuperarPassword />}
-          />
+  <Route
+    path="/panel-cliente"
+    element={
+      <RutaProtegida rolesPermitidos={["Cliente"]}>
+        <PanelCliente />
+      </RutaProtegida>
+    }
+  />
 
-          <Route
-            path="/restablecer-password"
-            element={<RestablecerPassword />}
-          />
+  <Route path="/recuperar-password" element={<RecuperarPassword />} />
 
-        </Routes>
+  <Route path="/restablecer-password" element={<RestablecerPassword />} />
+</Routes>
       </main>
-       <WhatsAppButton />
+
+      <WhatsAppButton />
       <Footer />
     </BrowserRouter>
   );

@@ -8,6 +8,7 @@ from app.models.servicio import Servicio
 from app.models.usuario import Usuario
 from app.schemas.reserva import CrearReserva, FacturaRespuesta
 from app.core.dependencies import obtener_usuario_actual, requiere_rol
+from sqlalchemy import func as sql_func
 
 router = APIRouter(prefix="/api/reservas", tags=["Reservas"])
 
@@ -132,3 +133,60 @@ def _serializar_factura(factura: Factura) -> dict:
             for r in factura.reservas
         ],
     }
+
+
+@router.get("/estadisticas")
+def estadisticas_reservas(
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requiere_rol("Administrador", "Empleado"))
+):
+    resultados = (
+        db.query(
+            Servicio.id_servicio,
+            Servicio.nombre,
+            Servicio.categoria,
+            sql_func.coalesce(sql_func.sum(Reserva.cantidad), 0).label("total_personas"),
+            sql_func.count(Reserva.id_reserva).label("veces_reservado"),
+        )
+        .outerjoin(Reserva, Reserva.id_servicio == Servicio.id_servicio)
+        .group_by(Servicio.id_servicio, Servicio.nombre, Servicio.categoria)
+        .order_by(sql_func.coalesce(sql_func.sum(Reserva.cantidad), 0).desc())
+        .all()
+    )
+
+    return [
+        {
+            "id_servicio": r.id_servicio,
+            "nombre": r.nombre,
+            "categoria": r.categoria,
+            "total_personas": int(r.total_personas),
+            "veces_reservado": int(r.veces_reservado),
+        }
+        for r in resultados
+    ]
+
+@router.get("/estadisticas/{id_servicio}/detalle")
+def detalle_reservas_servicio(
+    id_servicio: int,
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requiere_rol("Administrador", "Empleado"))
+):
+    reservas = (
+        db.query(Reserva)
+        .filter(Reserva.id_servicio == id_servicio)
+        .options(joinedload(Reserva.usuario))
+        .order_by(Reserva.fecha_reserva.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id_reserva": r.id_reserva,
+            "nombre_cliente": f"{r.usuario.nombre} {r.usuario.apellido}",
+            "correo_cliente": r.usuario.correo,
+            "cantidad": r.cantidad,
+            "fecha_reserva": r.fecha_reserva,
+            "estado": "Activa" if r.estado else "Cancelada",
+        }
+        for r in reservas
+    ]

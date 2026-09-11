@@ -5,14 +5,12 @@ import toast from "react-hot-toast";
 import EditarPerfil from "../components/EditarPerfil";
 import ServicioModal from "../components/ServicioModal";
 
-function PanelEmpleado() {
+function PanelEmpleado({ seccion, setSeccion }) {
   const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState(
     JSON.parse(localStorage.getItem("usuario"))
   );
-
-  const [seccion, setSeccion] = useState("resumen");
 
   const [servicios, setServicios] = useState([]);
   const [cargandoServicios, setCargandoServicios] = useState(false);
@@ -175,52 +173,6 @@ const guardarServicio = async (datosServicio) => {
 
         </div>
 
-        {/* =====================================================
-            MENÚ
-        ===================================================== */}
-
-        <div className="mb-8 flex flex-wrap gap-3">
-
-          {/* RESUMEN */}
-
-          <button
-            onClick={() => setSeccion("resumen")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "resumen"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            📊 Resumen
-          </button>
-
-          {/* SERVICIOS */}
-
-          <button
-            onClick={() => setSeccion("servicios")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "servicios"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            🛎️ Servicios
-          </button>
-
-          {/* PERFIL */}
-
-          <button
-            onClick={() => setSeccion("perfil")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "perfil"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            👤 Mi perfil
-          </button>
-
-        </div>
 
         {/* =====================================================
             RESUMEN

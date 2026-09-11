@@ -1,26 +1,33 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
 import { useState } from "react";
 
-function SidebarAdmin({ usuario, setUsuario }) {
-  const location = useLocation();
+function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoCliente, seccion, setSeccion }) {
   const navigate = useNavigate();
   const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
 
-  const enlaces = [
-    { ruta: "/", etiqueta: "Inicio", icono: "🏠" },
-    { ruta: "/destinos", etiqueta: "Destinos", icono: "📍" },
-    { ruta: "/Servicios", etiqueta: "Servicios", icono: "🛎️" },
-    { ruta: "/quienes-somos", etiqueta: "Nosotros", icono: "ℹ️" },
-    { ruta: "/contacto", etiqueta: "Contacto", icono: "✉️" },
+  const seccionesAdmin = [
+    { id: "resumen", etiqueta: "Resumen", icono: "📊" },
+    { id: "usuarios", etiqueta: "Usuarios", icono: "👥" },
+    { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
+    { id: "estadisticas", etiqueta: "Reservas", icono: "📈" },
+    { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 
-  const linkClass = (ruta) =>
-    `flex items-center gap-3 rounded-xl px-4 py-3 font-semibold transition ${
-      location.pathname === ruta
-        ? "bg-[#087f8c] text-white"
-        : "text-gray-600 hover:bg-gray-100"
-    }`;
+  const seccionesEmpleado = [
+    { id: "resumen", etiqueta: "Resumen", icono: "📊" },
+    { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
+    { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
+  ];
+
+  const secciones = usuario.rol === "Administrador" ? seccionesAdmin : seccionesEmpleado;
+  const rutaPanel = usuario.rol === "Administrador" ? "/panel-administrador" : "/panel-empleado";
+
+  const irASeccion = (idSeccion) => {
+    setSeccion(idSeccion);
+    setMenuMovilAbierto(false);
+    navigate(rutaPanel);
+  };
 
   const cerrarSesion = () => {
     localStorage.removeItem("token");
@@ -30,50 +37,56 @@ function SidebarAdmin({ usuario, setUsuario }) {
     navigate("/");
   };
 
-  const verPanel = () => {
-    setMenuMovilAbierto(false);
-    if (usuario.rol === "Administrador") navigate("/panel-administrador");
-    else if (usuario.rol === "Empleado") navigate("/panel-empleado");
-  };
-
-  const contenidoMenu = (
+  const contenidoMenu = (soloIconosEnDesktop = false) => (
     <>
-      <div className="mb-6 flex items-center gap-3 rounded-xl bg-gray-50 p-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#087f8c] text-sm font-bold text-white">
+      <div className={`mb-6 flex items-center gap-3 rounded-xl bg-gray-50 p-3 ${soloIconosEnDesktop ? "lg:justify-center lg:p-2" : ""}`}>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#087f8c] text-sm font-bold text-white">
           {usuario.nombre?.charAt(0).toUpperCase()}
         </span>
-        <div>
+        <div className={soloIconosEnDesktop ? "lg:hidden" : ""}>
           <p className="text-sm font-semibold text-gray-700">Bienvenido,</p>
           <p className="text-sm font-bold text-[#087f8c]">{usuario.nombre}</p>
         </div>
       </div>
 
       <nav className="flex flex-col gap-1">
-        {enlaces.map((enlace) => (
-          <Link
-            key={enlace.ruta}
-            to={enlace.ruta}
-            onClick={() => setMenuMovilAbierto(false)}
-            className={linkClass(enlace.ruta)}
+        {secciones.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => irASeccion(s.id)}
+            title={soloIconosEnDesktop ? s.etiqueta : ""}
+            className={`flex items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold transition ${
+              seccion === s.id ? "bg-[#087f8c] text-white" : "text-gray-600 hover:bg-gray-100"
+            } ${soloIconosEnDesktop ? "lg:justify-center lg:px-0" : ""}`}
           >
-            <span>{enlace.icono}</span>
-            {enlace.etiqueta}
-          </Link>
+            <span>{s.icono}</span>
+            <span className={soloIconosEnDesktop ? "lg:hidden" : ""}>{s.etiqueta}</span>
+          </button>
         ))}
       </nav>
 
       <div className="mt-6 space-y-1 border-t border-gray-100 pt-4">
         <button
-          onClick={verPanel}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-gray-600 transition hover:bg-gray-100"
+          onClick={() => {
+            setMenuMovilAbierto(false);
+            onVerComoCliente();
+          }}
+          title={soloIconosEnDesktop ? "Ir a página" : ""}
+          className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-gray-600 transition hover:bg-gray-100 ${
+            soloIconosEnDesktop ? "lg:justify-center lg:px-0" : ""
+          }`}
         >
-          ⚙️ Panel de gestión
+          🌐 <span className={soloIconosEnDesktop ? "lg:hidden" : ""}>Ir a página</span>
         </button>
+
         <button
           onClick={cerrarSesion}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-red-500 transition hover:bg-red-50"
+          title={soloIconosEnDesktop ? "Cerrar sesión" : ""}
+          className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-red-500 transition hover:bg-red-50 ${
+            soloIconosEnDesktop ? "lg:justify-center lg:px-0" : ""
+          }`}
         >
-          🚪 Cerrar sesión
+          🚪 <span className={soloIconosEnDesktop ? "lg:hidden" : ""}>Cerrar sesión</span>
         </button>
       </div>
     </>
@@ -81,7 +94,6 @@ function SidebarAdmin({ usuario, setUsuario }) {
 
   return (
     <>
-      {/* BARRA SUPERIOR MÓVIL (solo cuando no hay sidebar visible) */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-gray-100 bg-white px-4 py-3 lg:hidden">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Turismo Colombia" className="h-10 w-auto object-contain" />
@@ -101,19 +113,33 @@ function SidebarAdmin({ usuario, setUsuario }) {
         </button>
       </header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE */}
       {menuMovilAbierto && (
         <div className="border-b border-gray-100 bg-white px-4 py-4 lg:hidden">
-          {contenidoMenu}
+          {contenidoMenu(false)}
         </div>
       )}
 
-      {/* SIDEBAR FIJO (solo escritorio) */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col overflow-y-auto border-r border-gray-100 bg-white px-4 py-6 lg:flex">
-        <Link to="/" className="mb-8 flex items-center gap-2 px-2">
-          <img src={logo} alt="Turismo Colombia" className="h-14 w-auto object-contain" />
-        </Link>
-        {contenidoMenu}
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 hidden flex-col overflow-y-auto border-r border-gray-100 bg-white px-4 py-6 transition-all duration-300 lg:flex ${
+          colapsado ? "lg:w-20" : "lg:w-64"
+        }`}
+      >
+        <div className={`mb-8 flex items-center px-2 ${colapsado ? "justify-center" : "justify-between"}`}>
+          {!colapsado && (
+            <Link to="/" className="flex items-center gap-2">
+              <img src={logo} alt="Turismo Colombia" className="h-14 w-auto object-contain" />
+            </Link>
+          )}
+          <button
+            onClick={() => setColapsado(!colapsado)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#087f8c] hover:bg-gray-100"
+            title={colapsado ? "Expandir menú" : "Contraer menú"}
+          >
+            {colapsado ? "»" : "«"}
+          </button>
+        </div>
+
+        {contenidoMenu(colapsado)}
       </aside>
     </>
   );

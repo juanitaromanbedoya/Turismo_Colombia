@@ -7,14 +7,16 @@ import EditarPerfil from "../components/EditarPerfil";
 import UsuarioModal from "../components/UsuarioModal";
 import ServicioModal from "../components/ServicioModal";
 
-function PanelAdministrador() {
+function PanelAdministrador({ seccion, setSeccion }) {
   const navigate = useNavigate();
-
-  const [seccion, setSeccion] = useState("resumen");
-
   const [usuarios, setUsuarios] = useState([]);
   const [servicios, setServicios] = useState([]);
-
+  const [estadisticas, setEstadisticas] = useState([]);
+  const [cargandoEstadisticas, setCargandoEstadisticas] = useState(false);
+  const [errorEstadisticas, setErrorEstadisticas] = useState("");
+  const [servicioExpandido, setServicioExpandido] = useState(null);
+  const [detalleReservas, setDetalleReservas] = useState({});
+  const [cargandoDetalle, setCargandoDetalle] = useState(false);
   const [cargando, setCargando] = useState(true);
   const [cargandoServicios, setCargandoServicios] = useState(false);
 
@@ -66,6 +68,25 @@ useEffect(() => {
     }
   };
 
+  const cargarEstadisticas = async () => {
+  try {
+    setCargandoEstadisticas(true);
+    setErrorEstadisticas("");
+    const datos = await apiFetch("/api/reservas/estadisticas");
+    setEstadisticas(datos);
+  } catch (error) {
+    setErrorEstadisticas(error.message || "No se pudieron cargar las estadísticas.");
+  } finally {
+    setCargandoEstadisticas(false);
+  }
+};
+
+useEffect(() => {
+  if (seccion === "estadisticas" && token) {
+    cargarEstadisticas();
+  }
+}, [seccion, token]);
+
   useEffect(() => {
     if (seccion === "servicios" && token) {
       cargarServicios();
@@ -111,6 +132,28 @@ useEffect(() => {
       toast.error(error.message || "Error al guardar el usuario.");
     }
   };
+
+  const verClientesDeServicio = async (idServicio) => {
+  if (servicioExpandido === idServicio) {
+    setServicioExpandido(null);
+    return;
+  }
+
+  setServicioExpandido(idServicio);
+
+  if (!detalleReservas[idServicio]) {
+    try {
+      setCargandoDetalle(true);
+      const datos = await apiFetch(`/api/reservas/estadisticas/${idServicio}/detalle`);
+      setDetalleReservas((actual) => ({ ...actual, [idServicio]: datos }));
+    } catch (error) {
+      toast.error(error.message || "No se pudo cargar el detalle.");
+    } finally {
+      setCargandoDetalle(false);
+    }
+  }
+};
+
   const cambiarEstado = async (id, estadoActual) => {
     try {
       await apiFetch(`/api/usuarios/${id}/estado`, {
@@ -317,57 +360,6 @@ useEffect(() => {
           )}
         </div>
 
-        {/* =========================
-            MENÚ
-        ========================= */}
-
-        <div className="mb-8 flex flex-wrap gap-3">
-
-          <button
-            onClick={() => setSeccion("resumen")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "resumen"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            📊 Resumen
-          </button>
-
-          <button
-            onClick={() => setSeccion("usuarios")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "usuarios"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            👥 Usuarios
-          </button>
-
-          <button
-            onClick={() => setSeccion("servicios")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "servicios"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            🛎️ Servicios
-          </button>
-
-          <button
-            onClick={() => setSeccion("perfil")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "perfil"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            👤 Mi perfil
-          </button>
-
-        </div>
 
         {/* =========================
             RESUMEN
@@ -939,6 +931,71 @@ useEffect(() => {
 
           </div>
         )}
+
+{seccion === "estadisticas" && (
+  <div className="rounded-2xl bg-white p-8 shadow-xl">
+    <p className="text-sm font-bold uppercase tracking-widest text-[#f4b942]">
+      Popularidad
+    </p>
+    <h2 className="mt-2 text-3xl font-extrabold text-[#087f8c]">
+      Reservas por servicio
+    </h2>
+    <p className="mt-2 text-gray-600">
+      Consulta cuántas personas han reservado cada servicio.
+    </p>
+
+    {cargandoEstadisticas && (
+      <p className="mt-8 text-center font-semibold text-[#087f8c]">
+        Cargando estadísticas...
+      </p>
+    )}
+
+    {!cargandoEstadisticas && errorEstadisticas && (
+      <p className="mt-8 text-center font-semibold text-red-600">
+        {errorEstadisticas}
+      </p>
+    )}
+
+    {!cargandoEstadisticas && !errorEstadisticas && (
+      <div className="mt-8 overflow-hidden rounded-2xl border border-gray-100">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-[#004f54] text-white">
+              <tr>
+                <th className="px-5 py-4">Servicio</th>
+                <th className="px-5 py-4">Categoría</th>
+                <th className="px-5 py-4">Personas que han reservado</th>
+                <th className="px-5 py-4">Veces reservado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {estadisticas.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-5 py-10 text-center text-gray-500">
+                    No hay datos todavía.
+                  </td>
+                </tr>
+              ) : (
+                estadisticas.map((item) => (
+                  <tr key={item.id_servicio} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="px-5 py-4 font-semibold text-[#087f8c]">{item.nombre}</td>
+                    <td className="px-5 py-4 text-gray-600">{item.categoria || "—"}</td>
+                    <td className="px-5 py-4">
+                      <span className="rounded-full bg-blue-50 px-3 py-1 font-bold text-blue-700">
+                        {item.total_personas}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-gray-600">{item.veces_reservado}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
+  </div>
+)}
 
         {/* =========================
             PERFIL
