@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import EditarPerfil from "../components/EditarPerfil";
+import HistorialVentas from "../components/HistorialVentas";
+import ReporteDiario from "../components/ReporteDiario";
 import UsuarioModal from "../components/UsuarioModal";
 import ServicioModal from "../components/ServicioModal";
 
@@ -996,6 +998,8 @@ useEffect(() => {
     )}
   </div>
 )}
+ {seccion === "ventas" && <HistorialVentas />}
+ {seccion === "reporte" && <ReporteDiario />}
 
         {/* =========================
             PERFIL

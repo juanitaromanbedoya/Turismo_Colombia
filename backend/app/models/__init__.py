@@ -5,3 +5,4 @@ from app.models.servicio import Servicio
 from app.models.rol_permiso import rol_permiso
 from app.models.factura import Factura
 from app.models.reserva import Reserva
+from app.models.venta import Venta, DetalleVenta

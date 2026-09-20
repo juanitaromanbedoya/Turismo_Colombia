@@ -3,6 +3,8 @@ import { apiFetch } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import EditarPerfil from "../components/EditarPerfil";
+import HistorialVentas from "../components/HistorialVentas";
+import ReporteDiario from "../components/ReporteDiario";
 import ServicioModal from "../components/ServicioModal";
 
 function PanelEmpleado({ seccion, setSeccion }) {
@@ -597,6 +599,9 @@ const guardarServicio = async (datosServicio) => {
 
           </div>
         )}
+
+         {seccion === "ventas" && <HistorialVentas />}
+         {seccion === "reporte" && <ReporteDiario />}
 
         {/* =====================================================
             PERFIL

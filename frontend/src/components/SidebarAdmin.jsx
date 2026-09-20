@@ -11,12 +11,16 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "usuarios", etiqueta: "Usuarios", icono: "👥" },
     { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
     { id: "estadisticas", etiqueta: "Reservas", icono: "📈" },
+    { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
+    { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 
   const seccionesEmpleado = [
     { id: "resumen", etiqueta: "Resumen", icono: "📊" },
     { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
+    { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
+    { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 

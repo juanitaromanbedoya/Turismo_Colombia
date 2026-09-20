@@ -6,6 +6,7 @@ from app.models.reserva import Reserva
 from app.models.factura import Factura
 from app.models.servicio import Servicio
 from app.models.usuario import Usuario
+from app.models.venta import Venta, DetalleVenta
 from app.schemas.reserva import CrearReserva, FacturaRespuesta
 from app.core.dependencies import obtener_usuario_actual, requiere_rol
 from sqlalchemy import func as sql_func
@@ -65,6 +66,30 @@ def crear_reserva(
             precio_unitario=servicio.precio
         )
         db.add(nueva_reserva)
+    # Registrar la venta asociada a la factura
+    nueva_venta = Venta(
+        id_cliente=usuario_actual.id_usuario,
+        id_usuario_registra=None,   # compra hecha por el propio cliente desde la web
+        id_factura=nueva_factura.id_factura,
+        subtotal=total,
+        descuento=0,
+        impuesto=0,
+        total=total,
+        estado="Completada"
+    )
+    db.add(nueva_venta)
+    db.flush()  # para obtener id_venta
+
+    # Una línea de detalle por cada servicio comprado
+    for servicio, cantidad, subtotal in servicios_validados:
+        db.add(DetalleVenta(
+            id_venta=nueva_venta.id_venta,
+            id_servicio=servicio.id_servicio,
+            cantidad=cantidad,
+            precio_unitario=servicio.precio,
+            descuento=0,
+            subtotal=subtotal
+        ))
 
     db.commit()
     db.refresh(nueva_factura)
