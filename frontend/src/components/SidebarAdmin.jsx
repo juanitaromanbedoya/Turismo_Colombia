@@ -14,6 +14,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
     { id: "facturas", etiqueta: "Facturas", icono: "📑" },
+    { id: "pqr", etiqueta: "PQR", icono: "💬" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 
@@ -23,6 +24,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
     { id: "facturas", etiqueta: "Facturas", icono: "📑" },
+    { id: "pqr", etiqueta: "PQR", icono: "💬" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 

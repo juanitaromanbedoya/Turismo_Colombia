@@ -3,6 +3,7 @@ import EditarPerfil from "../components/EditarPerfil";
 import { apiFetch } from "../services/api";
 import toast from "react-hot-toast";
 import ConsultaFacturas from "../components/ConsultaFacturas";
+import MisPQR from "../components/MisPQR";
 
 function PanelCliente() {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -87,6 +88,16 @@ function PanelCliente() {
             }`}
           >
             📑 Mis facturas
+          </button>
+          <button
+            onClick={() => setSeccion("pqr")}
+            className={`rounded-xl px-5 py-3 font-bold transition ${
+              seccion === "pqr"
+                ? "bg-[#087f8c] text-white"
+                : "bg-white text-gray-600 shadow hover:bg-gray-100"
+            }`}
+          >
+            💬 Mis PQR
           </button>
         </div>
 
@@ -239,6 +250,7 @@ function PanelCliente() {
           </div>
         )}
         {seccion === "facturas" && <ConsultaFacturas esCliente />}
+        {seccion === "pqr" && <MisPQR />}
 
       </div>
     </section>

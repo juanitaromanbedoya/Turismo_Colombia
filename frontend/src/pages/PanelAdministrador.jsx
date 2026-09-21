@@ -9,6 +9,7 @@ import ReporteDiario from "../components/ReporteDiario";
 import UsuarioModal from "../components/UsuarioModal";
 import ServicioModal from "../components/ServicioModal";
 import ConsultaFacturas from "../components/ConsultaFacturas";
+import GestionPQR from "../components/GestionPQR";
 
 function PanelAdministrador({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -1002,6 +1003,7 @@ useEffect(() => {
  {seccion === "ventas" && <HistorialVentas />}
  {seccion === "reporte" && <ReporteDiario />}
  {seccion === "facturas" && <ConsultaFacturas />}
+ {seccion === "pqr" && <GestionPQR />}
 
         {/* =========================
             PERFIL

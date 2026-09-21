@@ -7,6 +7,7 @@ import HistorialVentas from "../components/HistorialVentas";
 import ReporteDiario from "../components/ReporteDiario";
 import ServicioModal from "../components/ServicioModal";
 import ConsultaFacturas from "../components/ConsultaFacturas";
+import GestionPQR from "../components/GestionPQR";
 
 function PanelEmpleado({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -601,9 +602,10 @@ const guardarServicio = async (datosServicio) => {
           </div>
         )}
 
-         {seccion === "ventas" && <HistorialVentas />}
-         {seccion === "reporte" && <ReporteDiario />}
-          {seccion === "facturas" && <ConsultaFacturas />}
+        {seccion === "ventas" && <HistorialVentas />}
+        {seccion === "reporte" && <ReporteDiario />}
+        {seccion === "facturas" && <ConsultaFacturas />}
+        {seccion === "pqr" && <GestionPQR />}
 
         {/* =====================================================
             PERFIL
