@@ -14,3 +14,6 @@ class Factura(Base):
 
     usuario = relationship("Usuario")
     reservas = relationship("Reserva", back_populates="factura")
+    @property
+    def numero_factura(self):
+        return f"FAC-{self.id_factura:06d}"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiFetch } from "../services/api";
+import { apiFetch, apiDescargar } from "../services/api";
 
 // Fecha local en formato AAAA-MM-DD (toISOString usa UTC y después de las 7 p. m. daría "mañana")
 const hoy = () => {
@@ -32,6 +32,8 @@ function ReporteDiario() {
   const [reporte, setReporte] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
+  const [descargandoExcel, setDescargandoExcel] = useState(false);
+  const [descargando, setDescargando] = useState(false);
 
   useEffect(() => {
     if (!fecha) return;
@@ -60,6 +62,36 @@ function ReporteDiario() {
     };
   }, [fecha]);
 
+    const descargarPdf = async () => {
+    setDescargando(true);
+    setError("");
+    try {
+      await apiDescargar(
+        `/api/ventas/reporte-diario/pdf?fecha=${fecha}`,
+        `reporte_ventas_${fecha}.pdf`
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDescargando(false);
+    }
+  };
+
+    const descargarExcel = async () => {
+    setDescargandoExcel(true);
+    setError("");
+    try {
+      await apiDescargar(
+        `/api/ventas/reporte-diario/excel?fecha=${fecha}`,
+        `reporte_ventas_${fecha}.xlsx`
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDescargandoExcel(false);
+    }
+  };
+
   const tarjetas = reporte
     ? [
         { titulo: "Total vendido", valor: formatoPesos(reporte.total_vendido), color: "text-[#087f8c]" },
@@ -80,18 +112,37 @@ function ReporteDiario() {
           </p>
         </div>
 
-        <div>
-          <label htmlFor="fecha-reporte" className="mb-1 block text-sm font-semibold text-gray-600">
-            Fecha del reporte
-          </label>
-          <input
-            id="fecha-reporte"
-            type="date"
-            value={fecha}
-            max={hoy()}
-            onChange={(e) => setFecha(e.target.value)}
-            className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#087f8c]"
-          />
+                <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label htmlFor="fecha-reporte" className="mb-1 block text-sm font-semibold text-gray-600">
+              Fecha del reporte
+            </label>
+            <input
+              id="fecha-reporte"
+              type="date"
+              value={fecha}
+              max={hoy()}
+              onChange={(e) => setFecha(e.target.value)}
+              className="rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#087f8c]"
+            />
+          </div>
+
+          <button
+            onClick={descargarPdf}
+            disabled={descargando || cargando || !fecha}
+            className="rounded-xl bg-[#087f8c] px-5 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            {descargando ? "Generando..." : "📄 Descargar PDF"}
+          </button>
+          
+          <button
+            onClick={descargarExcel}
+            disabled={descargandoExcel || cargando || !fecha}
+            className="rounded-xl bg-green-600 px-5 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50"
+          >
+            {descargandoExcel ? "Generando..." : "📊 Descargar Excel"}
+          </button>
+
         </div>
       </div>
 

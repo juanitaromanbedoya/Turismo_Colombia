@@ -6,6 +6,7 @@ import EditarPerfil from "../components/EditarPerfil";
 import HistorialVentas from "../components/HistorialVentas";
 import ReporteDiario from "../components/ReporteDiario";
 import ServicioModal from "../components/ServicioModal";
+import ConsultaFacturas from "../components/ConsultaFacturas";
 
 function PanelEmpleado({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -602,6 +603,7 @@ const guardarServicio = async (datosServicio) => {
 
          {seccion === "ventas" && <HistorialVentas />}
          {seccion === "reporte" && <ReporteDiario />}
+          {seccion === "facturas" && <ConsultaFacturas />}
 
         {/* =====================================================
             PERFIL

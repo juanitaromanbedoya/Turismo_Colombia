@@ -13,6 +13,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "estadisticas", etiqueta: "Reservas", icono: "📈" },
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
+    { id: "facturas", etiqueta: "Facturas", icono: "📑" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 
@@ -21,6 +22,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
+    { id: "facturas", etiqueta: "Facturas", icono: "📑" },
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 

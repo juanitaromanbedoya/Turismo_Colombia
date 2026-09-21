@@ -15,6 +15,7 @@ from app.models.servicio import Servicio
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.core.dependencies import obtener_usuario_actual, requiere_rol
+from app.core.reporte_excel import generar_excel_reporte
 from app.schemas.venta import VentaRespuesta, ReporteDiario
 
 router = APIRouter(prefix="/api/ventas", tags=["Ventas"])
@@ -177,5 +178,30 @@ def reporte_diario_pdf(
         media_type="application/pdf",
         headers={
             "Content-Disposition": f'attachment; filename="reporte_ventas_{fecha.isoformat()}.pdf"'
+        },
+    )
+
+@router.get("/reporte-diario/excel")
+def reporte_diario_excel(
+    fecha: Optional[date] = None,
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requiere_rol("Administrador", "Empleado")),
+):
+    fecha = fecha or date.today()
+
+    if fecha > date.today():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No se puede generar un reporte de una fecha futura"
+        )
+
+    reporte = construir_reporte(db, fecha, usuario_actual)
+    contenido = generar_excel_reporte(reporte)
+
+    return Response(
+        content=contenido,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": f'attachment; filename="reporte_ventas_{fecha.isoformat()}.xlsx"'
         },
     )

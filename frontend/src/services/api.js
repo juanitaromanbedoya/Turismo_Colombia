@@ -22,3 +22,32 @@ export async function apiFetch(endpoint, options = {}) {
 
   return datos;
 }
+
+export async function apiDescargar(endpoint, nombreArchivo) {
+  const token = localStorage.getItem("token");
+
+  const respuesta = await fetch(`${API_URL}${endpoint}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  if (!respuesta.ok) {
+    let mensaje = "No se pudo descargar el archivo.";
+    try {
+      const datos = await respuesta.json();
+      mensaje = datos.detail || mensaje;
+    } catch {
+      // la respuesta de error no venía en formato JSON
+    }
+    throw new Error(mensaje);
+  }
+
+  const blob = await respuesta.blob();
+  const url = window.URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = nombreArchivo;
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  window.URL.revokeObjectURL(url);
+}

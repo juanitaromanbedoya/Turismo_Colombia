@@ -8,6 +8,7 @@ import HistorialVentas from "../components/HistorialVentas";
 import ReporteDiario from "../components/ReporteDiario";
 import UsuarioModal from "../components/UsuarioModal";
 import ServicioModal from "../components/ServicioModal";
+import ConsultaFacturas from "../components/ConsultaFacturas";
 
 function PanelAdministrador({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -1000,6 +1001,7 @@ useEffect(() => {
 )}
  {seccion === "ventas" && <HistorialVentas />}
  {seccion === "reporte" && <ReporteDiario />}
+ {seccion === "facturas" && <ConsultaFacturas />}
 
         {/* =========================
             PERFIL

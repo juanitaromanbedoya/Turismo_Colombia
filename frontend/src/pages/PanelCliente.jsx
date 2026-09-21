@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import EditarPerfil from "../components/EditarPerfil";
 import { apiFetch } from "../services/api";
 import toast from "react-hot-toast";
+import ConsultaFacturas from "../components/ConsultaFacturas";
 
 function PanelCliente() {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -76,6 +77,16 @@ function PanelCliente() {
             }`}
           >
             🧾 Mis reservas
+          </button>
+                    <button
+            onClick={() => setSeccion("facturas")}
+            className={`rounded-xl px-5 py-3 font-bold transition ${
+              seccion === "facturas"
+                ? "bg-[#087f8c] text-white"
+                : "bg-white text-gray-600 shadow hover:bg-gray-100"
+            }`}
+          >
+            📑 Mis facturas
           </button>
         </div>
 
@@ -227,6 +238,7 @@ function PanelCliente() {
             ))}
           </div>
         )}
+        {seccion === "facturas" && <ConsultaFacturas esCliente />}
 
       </div>
     </section>
