@@ -7,3 +7,4 @@ from app.models.factura import Factura
 from app.models.reserva import Reserva
 from app.models.venta import Venta, DetalleVenta
 from app.models.pqr import PQR
+from app.models.chat import Conversacion, Mensaje

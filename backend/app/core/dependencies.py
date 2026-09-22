@@ -5,8 +5,10 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.core.security import verificar_token
+from typing import Optional
 
 security_scheme = HTTPBearer()
+security_opcional = HTTPBearer(auto_error=False)
 
 def obtener_usuario_actual(
     credenciales: HTTPAuthorizationCredentials = Depends(security_scheme),
@@ -50,3 +52,22 @@ def requiere_rol(*roles_permitidos: str):
         return usuario_actual
     
     return verificador
+
+def obtener_usuario_opcional(
+    credenciales: Optional[HTTPAuthorizationCredentials] = Depends(security_opcional),
+    db: Session = Depends(get_db)
+) -> Optional[Usuario]:
+    if credenciales is None:
+        return None
+    try:
+        payload = verificar_token(credenciales.credentials)
+        id_usuario = payload.get("sub")
+        if id_usuario is None:
+            return None
+    except JWTError:
+        return None
+
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == int(id_usuario)).first()
+    if usuario is None or not usuario.estado:
+        return None
+    return usuario

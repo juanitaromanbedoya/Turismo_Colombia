@@ -17,7 +17,11 @@ export async function apiFetch(endpoint, options = {}) {
   const datos = await respuesta.json();
 
   if (!respuesta.ok) {
-    throw new Error(datos.detail || "Ocurrió un error en la petición.");
+    let mensaje = datos.detail || "Ocurrió un error en la petición.";
+    if (Array.isArray(mensaje)) {
+      mensaje = mensaje.map((e) => e.msg || JSON.stringify(e)).join(" · ");
+    }
+    throw new Error(mensaje);
   }
 
   return datos;

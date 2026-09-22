@@ -79,6 +79,12 @@ def restablecer_password(datos: RestablecerPassword, db: Session = Depends(get_d
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
+    if verify_password(datos.nueva_contrasena, usuario.contrasena):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No puedes usar tu contraseña anterior. Elige una diferente."
+        )
+
     usuario.contrasena = hash_password(datos.nueva_contrasena)
     db.commit()
 

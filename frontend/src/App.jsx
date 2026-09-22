@@ -19,6 +19,7 @@ import WhatsAppButton from "./components/WhatsAppButton";
 import RestablecerPassword from "./pages/RestablecerPassword";
 import SidebarAdmin from "./components/SidebarAdmin";
 import ServicioDetalle from "./pages/ServicioDetalle";
+import ChatbotWidget from "./components/ChatbotWidget";
 
 function App() {
   const [usuario, setUsuario] = useState(() => {
@@ -141,10 +142,15 @@ function App() {
   <Route path="/recuperar-password" element={<RecuperarPassword />} />
 
   <Route path="/restablecer-password" element={<RestablecerPassword />} />
+  
 </Routes>
-      </main>
 
+      </main>
+        <ChatbotWidget />
+
+        
       <WhatsAppButton />
+      
       <Footer />
     </BrowserRouter>
   );
