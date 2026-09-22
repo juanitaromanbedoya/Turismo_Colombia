@@ -15,7 +15,15 @@ JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
 
-DATABASE_URL = (
-    f"mssql+pyodbc://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_DATABASE}"
-    f"?driver={ODBC_DRIVER.replace(' ', '+')}&TrustServerCertificate=yes"
-)
+_database_url_railway = os.getenv("DATABASE_URL")
+
+if _database_url_railway:
+    # En Railway, la variable DATABASE_URL de Postgres puede llegar como
+    # "postgres://..." (formato antiguo); SQLAlchemy exige "postgresql://"
+    DATABASE_URL = _database_url_railway.replace("postgres://", "postgresql://", 1)
+else:
+    # Desarrollo local, con SQL Server
+    DATABASE_URL = (
+        f"mssql+pyodbc://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_DATABASE}"
+        f"?driver={ODBC_DRIVER.replace(' ', '+')}&TrustServerCertificate=yes"
+    )
