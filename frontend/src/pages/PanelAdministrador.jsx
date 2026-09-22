@@ -10,6 +10,8 @@ import UsuarioModal from "../components/UsuarioModal";
 import ServicioModal from "../components/ServicioModal";
 import ConsultaFacturas from "../components/ConsultaFacturas";
 import GestionPQR from "../components/GestionPQR";
+import DashboardResumen from "../components/DashboardResumen";
+import DashboardVentas from "../components/DashboardVentas";
 
 function PanelAdministrador({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -389,194 +391,7 @@ useEffect(() => {
               </p>
 
             </div>
-
-            {/* TARJETAS */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-              {/* Total */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Total usuarios
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-[#087f8c]">
-                      {usuarios.length}
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#087f8c]/10 text-2xl">
-                    👥
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Clientes */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Clientes
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-[#087f8c]">
-                      {
-                        usuarios.filter(
-                          (usuario) => usuario.rol === "Cliente"
-                        ).length
-                      }
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-2xl">
-                    🧑
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Empleados */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Empleados
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-[#087f8c]">
-                      {
-                        usuarios.filter(
-                          (usuario) => usuario.rol === "Empleado"
-                        ).length
-                      }
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-100 text-2xl">
-                    👨‍💼
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Administradores */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Administradores
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-[#087f8c]">
-                      {
-                        usuarios.filter(
-                          (usuario) => usuario.rol === "Administrador"
-                        ).length
-                      }
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-2xl">
-                    🛡️
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
-            {/* ESTADO DE USUARIOS */}
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-
-              {/* Activos */}
-              <div className="rounded-2xl bg-white p-7 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Usuarios activos
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-green-600">
-                      {
-                        usuarios.filter(
-                          (usuario) => usuario.estado
-                        ).length
-                      }
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-2xl">
-                    ✅
-                  </div>
-
-                </div>
-
-                <div className="mt-5 h-3 overflow-hidden rounded-full bg-gray-200">
-
-                  <div
-                    className="h-full rounded-full bg-green-500"
-                    style={{
-                      width: `${
-                        usuarios.length > 0
-                          ? (
-                              usuarios.filter(
-                                (usuario) => usuario.estado
-                              ).length / usuarios.length
-                            ) * 100
-                          : 0
-                      }%`,
-                    }}
-                  />
-
-                </div>
-
-                <p className="mt-3 text-sm text-gray-500">
-                  Usuarios habilitados actualmente en el sistema.
-                </p>
-
-              </div>
-
-              {/* Inactivos */}
-              <div className="rounded-2xl bg-white p-7 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500">
-                      Usuarios inactivos
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-red-500">
-                      {
-                        usuarios.filter(
-                          (usuario) => !usuario.estado
-                        ).length
-                      }
-                    </p>
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl">
-                    ❌
-                  </div>
-
-                </div>
-
-                <p className="mt-5 text-sm text-gray-500">
-                  Usuarios que actualmente no tienen acceso activo
-                  al sistema.
-                </p>
-
-              </div>
-
-            </div>
+            <DashboardResumen />
 
             {/* INFORMACIÓN GENERAL */}
             <div className="rounded-2xl bg-[#004f54] p-8 text-white shadow-xl">
@@ -1004,6 +819,7 @@ useEffect(() => {
  {seccion === "reporte" && <ReporteDiario />}
  {seccion === "facturas" && <ConsultaFacturas />}
  {seccion === "pqr" && <GestionPQR />}
+ {seccion === "dashboard-ventas" && <DashboardVentas />}
 
         {/* =========================
             PERFIL

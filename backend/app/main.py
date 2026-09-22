@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app import models
 from app.core.dependencies import obtener_usuario_actual
-from app.routers import usuarios, auth, servicios, reservas, ventas, facturas, pqr
+from app.routers import usuarios, auth, servicios, reservas, ventas, facturas, pqr, estadisticas
 
 app = FastAPI(title="TurismoColombia API")
 
@@ -22,6 +22,7 @@ app.include_router(reservas.router)
 app.include_router(ventas.router)
 app.include_router(facturas.router)
 app.include_router(pqr.router)
+app.include_router(estadisticas.router)
 
 @app.get("/")
 def read_root():

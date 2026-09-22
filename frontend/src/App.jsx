@@ -103,7 +103,7 @@ function App() {
   <Route
     path="/Servicios"
     element={
-      <RutaProtegida>
+         <RutaProtegida mensajeRedireccion="Para ver los servicios de Turismo Colombia, primero debes iniciar sesión.">
         <Servicios />
       </RutaProtegida>
     }

@@ -4,10 +4,12 @@ import { apiFetch } from "../services/api";
 import toast from "react-hot-toast";
 import ConsultaFacturas from "../components/ConsultaFacturas";
 import MisPQR from "../components/MisPQR";
+import DashboardResumen from "../components/DashboardResumen";
+import DashboardVentas from "../components/DashboardVentas";
 
 function PanelCliente() {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-  const [seccion, setSeccion] = useState("perfil");
+    const [seccion, setSeccion] = useState("resumen");
 
   const [facturas, setFacturas] = useState([]);
   const [cargandoFacturas, setCargandoFacturas] = useState(false);
@@ -67,6 +69,26 @@ function PanelCliente() {
             }`}
           >
             👤 Mi perfil
+          </button>
+          <button
+            onClick={() => setSeccion("resumen")}
+            className={`rounded-xl px-5 py-3 font-bold transition ${
+              seccion === "resumen"
+                ? "bg-[#087f8c] text-white"
+                : "bg-white text-gray-600 shadow hover:bg-gray-100"
+            }`}
+          >
+            📊 Mi resumen
+          </button>
+          <button
+            onClick={() => setSeccion("mis-graficos")}
+            className={`rounded-xl px-5 py-3 font-bold transition ${
+              seccion === "mis-graficos"
+                ? "bg-[#087f8c] text-white"
+                : "bg-white text-gray-600 shadow hover:bg-gray-100"
+            }`}
+          >
+            📈 Mis gráficos
           </button>
 
           <button
@@ -251,6 +273,8 @@ function PanelCliente() {
         )}
         {seccion === "facturas" && <ConsultaFacturas esCliente />}
         {seccion === "pqr" && <MisPQR />}
+        {seccion === "resumen" && <DashboardResumen />}
+        {seccion === "mis-graficos" && <DashboardVentas />}
 
       </div>
     </section>

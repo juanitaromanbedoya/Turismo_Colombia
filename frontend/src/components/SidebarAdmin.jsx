@@ -11,6 +11,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "usuarios", etiqueta: "Usuarios", icono: "👥" },
     { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
     { id: "estadisticas", etiqueta: "Reservas", icono: "📈" },
+    { id: "dashboard-ventas", etiqueta: "Dashboard de ventas", icono: "📈" },
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },
     { id: "facturas", etiqueta: "Facturas", icono: "📑" },
@@ -20,6 +21,7 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
 
   const seccionesEmpleado = [
     { id: "resumen", etiqueta: "Resumen", icono: "📊" },
+    { id: "dashboard-ventas", etiqueta: "Dashboard de ventas", icono: "📈" },
     { id: "servicios", etiqueta: "Servicios", icono: "🛎️" },
     { id: "ventas", etiqueta: "Ventas", icono: "🧾" },
     { id: "reporte", etiqueta: "Reporte diario", icono: "📅" },

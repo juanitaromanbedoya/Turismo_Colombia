@@ -8,6 +8,8 @@ import ReporteDiario from "../components/ReporteDiario";
 import ServicioModal from "../components/ServicioModal";
 import ConsultaFacturas from "../components/ConsultaFacturas";
 import GestionPQR from "../components/GestionPQR";
+import DashboardResumen from "../components/DashboardResumen";
+import DashboardVentas from "../components/DashboardVentas";
 
 function PanelEmpleado({ seccion, setSeccion }) {
   const navigate = useNavigate();
@@ -58,7 +60,7 @@ useEffect(() => {
 };
 
   useEffect(() => {
-    if (seccion === "servicios" && token) {
+    if ((seccion === "servicios" || seccion === "resumen") && token) {
       cargarServicios();
     }
   }, [seccion, token]);
@@ -203,174 +205,9 @@ const guardarServicio = async (datosServicio) => {
               </p>
 
             </div>
+            <DashboardResumen />
 
-            {/* TARJETAS */}
-
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
-              {/* TOTAL */}
-
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-sm font-semibold text-gray-500">
-                      Total servicios
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-[#087f8c]">
-                      {servicios.length}
-                    </p>
-
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#087f8c]/10 text-2xl">
-                    🛎️
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* ACTIVOS */}
-
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-sm font-semibold text-gray-500">
-                      Servicios activos
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-green-600">
-                      {serviciosActivos}
-                    </p>
-
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-2xl">
-                    ✅
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* INACTIVOS */}
-
-              <div className="rounded-2xl bg-white p-6 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-sm font-semibold text-gray-500">
-                      Servicios inactivos
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-red-500">
-                      {serviciosInactivos}
-                    </p>
-
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl">
-                    ❌
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* ESTADO */}
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-
-              <div className="rounded-2xl bg-white p-7 shadow-lg">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-sm font-semibold text-gray-500">
-                      Porcentaje de servicios activos
-                    </p>
-
-                    <p className="mt-2 text-4xl font-extrabold text-green-600">
-                      {servicios.length > 0
-                        ? Math.round(
-                            (serviciosActivos /
-                              servicios.length) *
-                              100
-                          )
-                        : 0}
-                      %
-                    </p>
-
-                  </div>
-
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-2xl">
-                    📈
-                  </div>
-
-                </div>
-
-                <div className="mt-5 h-3 overflow-hidden rounded-full bg-gray-200">
-
-                  <div
-                    className="h-full rounded-full bg-green-500"
-                    style={{
-                      width: `${
-                        servicios.length > 0
-                          ? (serviciosActivos /
-                              servicios.length) *
-                            100
-                          : 0
-                      }%`,
-                    }}
-                  />
-
-                </div>
-
-                <p className="mt-3 text-sm text-gray-500">
-                  Porcentaje de servicios actualmente disponibles.
-                </p>
-
-              </div>
-
-              {/* ACCESO RÁPIDO */}
-
-              <div className="rounded-2xl bg-white p-7 shadow-lg">
-
-                <p className="text-sm font-semibold text-gray-500">
-                  Gestión rápida
-                </p>
-
-                <h3 className="mt-2 text-2xl font-extrabold text-[#087f8c]">
-                  Administrar servicios
-                </h3>
-
-                <p className="mt-2 text-gray-500">
-                  Crea nuevos servicios o modifica los existentes.
-                </p>
-
-                <button
-                  onClick={() => setSeccion("servicios")}
-                  className="mt-5 rounded-xl bg-[#087f8c] px-5 py-3 font-bold text-white shadow hover:bg-[#006b75]"
-                >
-                  Ir a servicios →
-                </button>
-
-              </div>
-
-            </div>
-
+    
             {/* INFORMACIÓN GENERAL */}
 
             <div className="rounded-2xl bg-[#004f54] p-8 text-white shadow-xl">
@@ -606,6 +443,7 @@ const guardarServicio = async (datosServicio) => {
         {seccion === "reporte" && <ReporteDiario />}
         {seccion === "facturas" && <ConsultaFacturas />}
         {seccion === "pqr" && <GestionPQR />}
+        {seccion === "dashboard-ventas" && <DashboardVentas />}
 
         {/* =====================================================
             PERFIL

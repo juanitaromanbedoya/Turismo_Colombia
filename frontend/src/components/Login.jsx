@@ -1,14 +1,16 @@
-
 import { apiFetch } from "../services/api";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import Input from "./Input";
 import Button from "./Button";
-import RegisterModal from "./RegisterModal"
+import RegisterModal from "./RegisterModal";
 
-function Login({ setUsuario })  {
+function Login({ setUsuario }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const mensajeRedireccion = location.state?.mensaje;
+
   const [mostrarRegistro, setMostrarRegistro] = useState(false);
   const [formulario, setFormulario] = useState({
     correo: "",
@@ -59,47 +61,45 @@ function Login({ setUsuario })  {
     });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!validarFormulario()) {
-    return;
-  }
-
-  try {
-    const datos = await apiFetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        correo: formulario.correo,
-        contrasena: formulario.contrasena,
-      }),
-    });
-
-    localStorage.setItem("token", datos.access_token);
-    localStorage.setItem("usuario", JSON.stringify(datos.usuario));
-
-    setUsuario(datos.usuario);
-
-    window.dispatchEvent(new Event("auth-cambio"));
-
-    toast.success("Inicio de sesión exitoso.");
-
-    if (datos.usuario.rol === "Administrador") {
-      navigate("/panel-administrador");
-    } else if (datos.usuario.rol === "Empleado") {
-      navigate("/panel-empleado");
-    } else {
-      navigate("/");
+    if (!validarFormulario()) {
+      return;
     }
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-    toast.error(error.message || "Correo o contraseña incorrectos.");
-  }
-};
+
+    try {
+      const datos = await apiFetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          correo: formulario.correo,
+          contrasena: formulario.contrasena,
+        }),
+      });
+
+      localStorage.setItem("token", datos.access_token);
+      localStorage.setItem("usuario", JSON.stringify(datos.usuario));
+
+      setUsuario(datos.usuario);
+
+      window.dispatchEvent(new Event("auth-cambio"));
+
+      toast.success("Inicio de sesión exitoso.");
+
+      if (datos.usuario.rol === "Administrador") {
+        navigate("/panel-administrador");
+      } else if (datos.usuario.rol === "Empleado") {
+        navigate("/panel-empleado");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      toast.error(error.message || "Correo o contraseña incorrectos.");
+    }
+  };
 
   return (
-
-    
     <section className="flex min-h-[calc(100vh-160px)] items-center justify-center bg-[#f8f6ef] px-4 py-12">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl md:grid-cols-2">
 
@@ -109,12 +109,14 @@ const handleSubmit = async (e) => {
           </p>
 
           <h1 className="mb-6 text-4xl font-extrabold leading-tight">
-            Descubre lugares increíbles.
+            {mensajeRedireccion
+              ? "Inicia sesión para continuar."
+              : "Descubre lugares increíbles."}
           </h1>
 
           <p className="max-w-md text-lg leading-relaxed text-white/80">
-            Inicia sesión y continúa explorando los destinos, experiencias
-            y maravillas que Colombia tiene para ofrecerte.
+            {mensajeRedireccion ||
+              "Inicia sesión y continúa explorando los destinos, experiencias y maravillas que Colombia tiene para ofrecerte."}
           </p>
 
           <div className="mt-8 h-1 w-16 rounded-full bg-[#f4b942]" />
@@ -221,10 +223,10 @@ const handleSubmit = async (e) => {
         </div>
       </div>
       {mostrarRegistro && (
-  <RegisterModal
-    onClose={() => setMostrarRegistro(false)}
-  />
-)}
+        <RegisterModal
+          onClose={() => setMostrarRegistro(false)}
+        />
+      )}
     </section>
   );
 }
