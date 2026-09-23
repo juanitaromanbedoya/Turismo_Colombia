@@ -5,8 +5,10 @@
   },
   "steps": {
     "install": {
-      "inputs": [{ "local": true, "include": ["."] }],
-      "commands": ["npm install"]
+      "commands": [
+        { "src": ".", "dest": "." },
+        "npm install"
+      ]
     },
     "build": {
       "inputs": [{ "step": "install" }],
