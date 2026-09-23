@@ -80,17 +80,7 @@ function PanelCliente() {
           >
             📊 Mi resumen
           </button>
-          <button
-            onClick={() => setSeccion("mis-graficos")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "mis-graficos"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            📈 Mis gráficos
-          </button>
-
+          
           <button
             onClick={() => setSeccion("reservas")}
             className={`rounded-xl px-5 py-3 font-bold transition ${
