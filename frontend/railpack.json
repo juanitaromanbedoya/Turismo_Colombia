@@ -5,7 +5,8 @@
   },
   "steps": {
     "install": {
-      "commands": ["pwd && ls -la && npm install"]
+      "inputs": [{ "local": true, "include": ["."] }],
+      "commands": ["npm install"]
     },
     "build": {
       "inputs": [{ "step": "install" }],
