@@ -1,11 +1,7 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from app.core.config import EMAIL_USER, EMAIL_PASSWORD
+import requests
+from app.core.config import BREVO_API_KEY, EMAIL_USER
 
 def enviar_correo_recuperacion(destinatario: str, enlace: str, nombre: str):
-    asunto = "Recupera tu contraseña - Turismo Colombia"
-
     cuerpo_html = f"""
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto;">
         <h2 style="color: #087f8c;">Turismo Colombia</h2>
@@ -21,13 +17,18 @@ def enviar_correo_recuperacion(destinatario: str, enlace: str, nombre: str):
     </div>
     """
 
-    mensaje = MIMEMultipart("alternative")
-    mensaje["Subject"] = asunto
-    mensaje["From"] = EMAIL_USER
-    mensaje["To"] = destinatario
-    mensaje.attach(MIMEText(cuerpo_html, "html"))
-
-    with smtplib.SMTP("smtp.gmail.com", 587) as servidor:
-        servidor.starttls()
-        servidor.login(EMAIL_USER, EMAIL_PASSWORD)
-        servidor.sendmail(EMAIL_USER, destinatario, mensaje.as_string())
+    response = requests.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={
+            "api-key": BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "accept": "application/json",
+        },
+        json={
+            "sender": {"name": "Turismo Colombia", "email": EMAIL_USER},
+            "to": [{"email": destinatario}],
+            "subject": "Recupera tu contraseña - Turismo Colombia",
+            "htmlContent": cuerpo_html,
+        },
+    )
+    response.raise_for_status()
