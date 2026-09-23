@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
@@ -7,9 +8,15 @@ from app.routers import usuarios, auth, servicios, reservas, ventas, facturas, p
 
 app = FastAPI(title="TurismoColombia API")
 
+origins = ["http://localhost:5173", "http://192.168.0.124:5173"]
+
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://192.168.0.124:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
