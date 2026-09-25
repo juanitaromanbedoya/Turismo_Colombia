@@ -21,7 +21,7 @@ _database_url_railway = os.getenv("DATABASE_URL")
 if _database_url_railway:
     # En Railway, la variable DATABASE_URL de Postgres puede llegar como
     # "postgres://..." (formato antiguo); SQLAlchemy exige "postgresql://"
-    DATABASE_URL = _database_url_railway.replace("postgres://", "postgresql://", 1)
+        DATABASE_URL = _database_url_railway.replace("postgres://", "postgresql+psycopg2://", 1).replace("postgresql://", "postgresql+psycopg2://", 1)
 else:
     # Desarrollo local, con SQL Server
     DATABASE_URL = (
