@@ -30,8 +30,23 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
     { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
   ];
 
-  const secciones = usuario.rol === "Administrador" ? seccionesAdmin : seccionesEmpleado;
-  const rutaPanel = usuario.rol === "Administrador" ? "/panel-administrador" : "/panel-empleado";
+    const seccionesCliente = [
+    { id: "resumen", etiqueta: "Mi resumen", icono: "📊" },
+    { id: "reservas", etiqueta: "Mis reservas", icono: "🧾" },
+    { id: "facturas", etiqueta: "Mis facturas", icono: "📑" },
+    { id: "pqr", etiqueta: "Mis PQR", icono: "💬" },
+    { id: "perfil", etiqueta: "Mi perfil", icono: "👤" },
+  ];
+
+  const secciones =
+    usuario.rol === "Administrador" ? seccionesAdmin :
+    usuario.rol === "Empleado" ? seccionesEmpleado :
+    seccionesCliente;
+
+  const rutaPanel =
+    usuario.rol === "Administrador" ? "/panel-administrador" :
+    usuario.rol === "Empleado" ? "/panel-empleado" :
+    "/panel-cliente";
 
   const irASeccion = (idSeccion) => {
     setSeccion(idSeccion);
@@ -81,12 +96,15 @@ function SidebarAdmin({ usuario, setUsuario, colapsado, setColapsado, onVerComoC
             setMenuMovilAbierto(false);
             onVerComoCliente();
           }}
-          title={soloIconosEnDesktop ? "Ir a página" : ""}
+          title={soloIconosEnDesktop ? "Volver a la web" : ""}
           className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-semibold text-gray-600 transition hover:bg-gray-100 ${
             soloIconosEnDesktop ? "lg:justify-center lg:px-0" : ""
           }`}
         >
-          🌐 <span className={soloIconosEnDesktop ? "lg:hidden" : ""}>Ir a página</span>
+          🌐{" "}
+          <span className={soloIconosEnDesktop ? "lg:hidden" : ""}>
+            {usuario.rol === "Cliente" ? "Volver a la web" : "Ir a página"}
+          </span>
         </button>
 
         <button

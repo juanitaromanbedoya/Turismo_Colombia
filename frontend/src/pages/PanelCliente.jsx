@@ -7,9 +7,8 @@ import MisPQR from "../components/MisPQR";
 import DashboardResumen from "../components/DashboardResumen";
 import DashboardVentas from "../components/DashboardVentas";
 
-function PanelCliente() {
+function PanelCliente({ seccion, setSeccion }) {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-    const [seccion, setSeccion] = useState("resumen");
 
   const [facturas, setFacturas] = useState([]);
   const [cargandoFacturas, setCargandoFacturas] = useState(false);
@@ -43,7 +42,7 @@ function PanelCliente() {
 
   return (
     <section className="min-h-screen bg-[#f8f6ef] px-4 py-12">
-      <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-5xl">
 
         {/* ENCABEZADO */}
         <div className="mb-6">
@@ -56,61 +55,6 @@ function PanelCliente() {
           <p className="mt-2 text-lg text-gray-600">
             Bienvenido, {usuario.nombre} {usuario.apellido}.
           </p>
-        </div>
-
-        {/* MENÚ DE SECCIONES */}
-        <div className="mb-6 flex flex-wrap gap-3">
-          <button
-            onClick={() => setSeccion("perfil")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "perfil"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            👤 Mi perfil
-          </button>
-          <button
-            onClick={() => setSeccion("resumen")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "resumen"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            📊 Mi resumen
-          </button>
-          
-          <button
-            onClick={() => setSeccion("reservas")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "reservas"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            🧾 Mis reservas
-          </button>
-                    <button
-            onClick={() => setSeccion("facturas")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "facturas"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            📑 Mis facturas
-          </button>
-          <button
-            onClick={() => setSeccion("pqr")}
-            className={`rounded-xl px-5 py-3 font-bold transition ${
-              seccion === "pqr"
-                ? "bg-[#087f8c] text-white"
-                : "bg-white text-gray-600 shadow hover:bg-gray-100"
-            }`}
-          >
-            💬 Mis PQR
-          </button>
         </div>
 
         {/* SECCIÓN PERFIL */}

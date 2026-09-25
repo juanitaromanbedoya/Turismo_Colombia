@@ -32,7 +32,8 @@ function App() {
   const [seccionPanel, setSeccionPanel] = useState("resumen");
 
   const esGestion = usuario && (usuario.rol === "Administrador" || usuario.rol === "Empleado");
-  const mostrarSidebar = esGestion && !vistaCliente;
+  const esPanel = usuario && (esGestion || usuario.rol === "Cliente");
+  const mostrarSidebar = esPanel && !vistaCliente;
 
   return (
     <BrowserRouter>
@@ -134,7 +135,7 @@ function App() {
     path="/panel-cliente"
     element={
       <RutaProtegida rolesPermitidos={["Cliente"]}>
-        <PanelCliente />
+        <PanelCliente seccion={seccionPanel} setSeccion={setSeccionPanel} />
       </RutaProtegida>
     }
   />

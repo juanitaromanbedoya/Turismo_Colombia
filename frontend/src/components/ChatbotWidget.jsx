@@ -81,7 +81,7 @@ function ChatbotWidget() {
 
       {/* ---------- Ventana del chat ---------- */}
       {abierto && (
-        <div className="fixed bottom-44 right-6 z-50 flex h-[500px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div className="fixed top-28 bottom-40 right-6 z-50 flex w-[92vw] max-w-sm flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
           <div className="bg-[#087f8c] px-4 py-3 text-white">
             <p className="text-xs font-semibold uppercase tracking-widest text-yellow-300">
               Turismo Colombia

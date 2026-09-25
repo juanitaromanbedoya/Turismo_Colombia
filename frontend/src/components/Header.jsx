@@ -67,7 +67,7 @@ function Header({ esGestion, vistaCliente, onVolverAlPanel }) {
   };
 
 
-  const verPanel = () => {
+    const verPanel = () => {
     setMenuAbierto(false);
     setMenuMovilAbierto(false);
 
@@ -76,12 +76,9 @@ function Header({ esGestion, vistaCliente, onVolverAlPanel }) {
       return;
     }
 
-    // Si es Admin/Empleado viendo el sitio como cliente, volvemos al sidebar
-    if (esGestion && vistaCliente) {
+    // Si se estaba viendo el sitio como cliente (Admin/Empleado/Cliente), volvemos al panel
+    if (vistaCliente) {
       onVolverAlPanel();
-      if (usuario.rol === "Administrador") navigate("/panel-administrador");
-      else if (usuario.rol === "Empleado") navigate("/panel-empleado");
-      return;
     }
 
     if (usuario.rol === "Administrador") navigate("/panel-administrador");
